@@ -16,28 +16,21 @@ define(`ifenvelse', `ifelse(read_env(`$1'),, `$2', read_env(`$1'))')
 define(`DEFAULT_DOCKER_REGISTRY', ifenvelse(`DEFAULT_DOCKER_REGISTRY', openslides))
 
 dnl Parse image versions that can be configured through .env
-dnl Read name from env; otherwise, set default
-define(`DOCKER_OPENSLIDES_BACKEND_NAME',
-  ifenvelse(`DOCKER_OPENSLIDES_BACKEND_NAME', openslides-server))
-define(`DOCKER_OPENSLIDES_FRONTEND_NAME',
-  ifenvelse(`DOCKER_OPENSLIDES_FRONTEND_NAME', openslides-client))
-define(`DOCKER_OPENSLIDES_AUTOUPDATE_NAME',
-  ifenvelse(`DOCKER_OPENSLIDES_AUTOUPDATE_NAME', openslides-autoupdate))
-define(`DOCKER_OPENSLIDES_PROXY_NAME',
-  ifenvelse(`DOCKER_OPENSLIDES_PROXY_NAME', openslides-proxy))
-dnl Define final image:tag spec
-define(`prepend_docker_registry', `ifelse(regexp($1, `\/'), -1, DEFAULT_DOCKER_REGISTRY/$1, $1)')
 define(`BACKEND_IMAGE',
-prepend_docker_registry(`DOCKER_OPENSLIDES_BACKEND_NAME'):dnl
+ifenvelse(`DOCKER_OPENSLIDES_BACKEND_REGISTRY', DEFAULT_DOCKER_REGISTRY)/dnl
+openslides-server:dnl
 ifenvelse(`DOCKER_OPENSLIDES_BACKEND_TAG', latest))
 define(`FRONTEND_IMAGE',
-prepend_docker_registry(`DOCKER_OPENSLIDES_FRONTEND_NAME'):dnl
+ifenvelse(`DOCKER_OPENSLIDES_FRONTEND_REGISTRY', DEFAULT_DOCKER_REGISTRY)/dnl
+openslides-client:dnl
 ifenvelse(`DOCKER_OPENSLIDES_FRONTEND_TAG', latest))
 define(`AUTOUPDATE_IMAGE',
-prepend_docker_registry(`DOCKER_OPENSLIDES_AUTOUPDATE_NAME'):dnl
+ifenvelse(`DOCKER_OPENSLIDES_AUTOUPDATE_REGISTRY', DEFAULT_DOCKER_REGISTRY)/dnl
+openslides-autoupdate:dnl
 ifenvelse(`DOCKER_OPENSLIDES_AUTOUPDATE_TAG', latest))
 define(`PROXY_IMAGE',
-prepend_docker_registry(`DOCKER_OPENSLIDES_PROXY_NAME'):dnl
+ifenvelse(`DOCKER_OPENSLIDES_PROXY_REGISTRY', DEFAULT_DOCKER_REGISTRY)/dnl
+openslides-proxy:dnl
 ifenvelse(`DOCKER_OPENSLIDES_PROXY_TAG', latest))
 
 define(`PRIMARY_DB', `ifenvelse(`PGNODE_REPMGR_PRIMARY', pgnode1)')
